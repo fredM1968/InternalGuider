@@ -1,0 +1,16 @@
+Internal Guider - plugin NINA (version de test)
+
+Prérequis
+- NINA 3.2 (la même version majeure que celle utilisée pour compiler le plugin).
+- Une caméra de guidage reconnue par NINA (pilote natif ou ASCOM) et une monture connectée à NINA avec "pulse guide".
+
+Installation
+- L'installeur copie la DLL dans %LOCALAPPDATA%\NINA\Plugins\3.0.0\InternalGuider
+- Fermez NINA avant d'installer (l'installeur le proposera sinon).
+- Une mise à jour s'installe de la même façon : lancer le nouvel installeur remplace la DLL.
+
+Vos réglages, calibrations, darks et journaux de guidage sont conservés dans
+%LOCALAPPDATA%\NINA\InternalGuider : ils ne sont pas supprimés par une mise à jour.
+
+Ceci est une version de test : merci de joindre le dernier journal de guidage
+(%LOCALAPPDATA%\NINA\InternalGuider\Logs) et le journal de NINA lorsque vous signalez un problème.

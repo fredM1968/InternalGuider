@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "NINA.Plugin.InternalGuider": {
+      "commandName": "Project"
+    },
+    "NINA": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\NINA\\N.I.N.A. - 3.1\\NINA.exe"
+    }
+  }
+}

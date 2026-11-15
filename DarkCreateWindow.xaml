@@ -1,0 +1,43 @@
+﻿<Window x:Class="NINA.Plugin.InternalGuider.DarkCreateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Internal Guider - Créer des darks" Width="620" Height="360"
+        Background="#FF2F3A3D" Foreground="#FFE8E8E8"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Padding="24,4" MinWidth="100" x:Name="StopButton" Content="Interrompre" IsEnabled="False" Click="Stop_Click" />
+            <Button Padding="24,4" MinWidth="100" x:Name="CloseButton" Content="Fermer" Margin="8,0,0,0" IsCancel="True" Click="Close_Click" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock x:Name="TitleText" Text="Pose des darks (même gain que celui réglé dans la fenêtre aperçu)" Margin="0,0,0,10" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="De" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="FromBox" Width="80" ItemStringFormat="{}{0:0.###} s" />
+                <TextBlock Text="à" VerticalAlignment="Center" Margin="12,0,6,0" />
+                <ComboBox x:Name="ToBox" Width="80" ItemStringFormat="{}{0:0.###} s" />
+                <TextBlock Text="nbre" VerticalAlignment="Center" Margin="16,0,6,0" />
+                <TextBox x:Name="CountBox" Width="50" Text="10"
+                         ToolTip="Nombre de poses par durée de pose (le dark est leur médiane), de 1 à 100" />
+                <Button Padding="24,4" MinWidth="100" x:Name="GenerateButton" Content="Générer" Margin="16,0,0,0" Click="Generate_Click" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0" x:Name="GainSeriesPanel">
+                <TextBlock Text="Série de gains :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="SeriesBox" VerticalAlignment="Center" Checked="Series_Changed" Unchecked="Series_Changed"
+                          ToolTip="ON : crée les darks pour toute une série de gains, en pourcentage du gain maximum de la caméra. Le gain automatique choisit ensuite parmi ces gains, sans nouveau dark." />
+                <TextBlock Text="de" VerticalAlignment="Center" Margin="16,0,6,0" />
+                <TextBox x:Name="PctFromBox" Width="40" Text="0" />
+                <TextBlock Text="% à" VerticalAlignment="Center" Margin="6,0,6,0" />
+                <TextBox x:Name="PctToBox" Width="40" Text="100" />
+                <TextBlock Text="% du gain max, par pas de" VerticalAlignment="Center" Margin="6,0,6,0" />
+                <TextBox x:Name="PctStepBox" Width="40" Text="5" />
+                <TextBlock Text="%" VerticalAlignment="Center" Margin="6,0,0,0" />
+            </StackPanel>
+            <TextBlock x:Name="SeriesInfo" Margin="0,6,0,0" Opacity="0.7" TextWrapping="Wrap" />
+            <TextBlock x:Name="ProgressText" Margin="0,18,0,6" TextWrapping="Wrap" Text=" " />
+            <ProgressBar x:Name="Progress" Height="14" Minimum="0" Maximum="1" />
+            <TextBlock Margin="0,14,0,0" Opacity="0.7" TextWrapping="Wrap"
+                       Text="Un dark créé ne sert que pour la même caméra, la même durée de pose et le même gain. Un dark existant pour la même pose et le même gain est remplacé." />
+        </StackPanel>
+    </DockPanel>
+</Window>

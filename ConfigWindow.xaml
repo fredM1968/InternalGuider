@@ -1,0 +1,35 @@
+<Window x:Class="NINA.Plugin.InternalGuider.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Internal Guider - Configuration" Width="560" Height="420"
+        Background="#FF2F3A3D" Foreground="#FFE8E8E8"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+    <StackPanel Margin="16">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Caméra unique (guider avec la caméra principale du profil NINA) :" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <CheckBox IsChecked="{Binding MonoCamera}" VerticalAlignment="Center"
+                      ToolTip="Le plugin utilise la caméra principale du profil NINA : plus besoin de la choisir dans la liste. L'aperçu en direct est alors arrêté par défaut pour ne pas gêner NINA." />
+        </StackPanel>
+        <TextBlock Text="Caméra de guidage" Margin="0,0,0,6" />
+        <DockPanel LastChildFill="True">
+            <Button Padding="24,4" MinWidth="100" DockPanel.Dock="Right" Content="Réglages de la caméra…" Margin="8,0,0,0"
+                    IsEnabled="{Binding CanOpenCameraSettings}" Click="CameraSettings_Click"
+                    ToolTip="Ouvre la fenêtre de réglages du pilote de la caméra (par exemple le sélecteur ASCOM)" />
+            <ComboBox ItemsSource="{Binding Cameras}" IsEnabled="{Binding NotMono}"
+                      DisplayMemberPath="Name"
+                      SelectedItem="{Binding SelectedCamera}" />
+        </DockPanel>
+        <TextBlock Text="Recherche des caméras…" Margin="0,8,0,0" FontStyle="Italic"
+                   Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" />
+
+        <TextBlock Text="Focale du télescope de guidage (mm) ; en caméra unique, celle du télescope principal" Margin="0,16,0,6" />
+        <TextBox Text="{Binding FocalLengthText, UpdateSourceTrigger=PropertyChanged}" Width="100"
+                 HorizontalAlignment="Left" />
+
+        <Button Padding="24,4" MinWidth="100" Content="Fermer" Margin="0,16,0,0" HorizontalAlignment="Right"
+                Click="Close_Click" />
+    </StackPanel>
+</Window>

@@ -1,0 +1,219 @@
+﻿<Window x:Class="NINA.Plugin.InternalGuider.AdvancedWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Internal Guider - Paramètres avancés" Width="760" Height="800" MinWidth="560" MinHeight="420"
+        Background="#FF2F3A3D" Foreground="#FFE8E8E8"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Padding="24,4" Content="OK" Width="110" IsDefault="True" Click="Ok_Click" />
+            <Button Padding="24,4" Content="Annuler" Width="110" Margin="8,0,0,0" IsCancel="True" Click="Cancel_Click" />
+        </StackPanel>
+        <TabControl Background="#FF2F3A3D" Foreground="#FFE8E8E8" BorderBrush="#FF55646A">
+            <TabItem Header="Général">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="14,12,14,12">
+            <TextBlock Text="Mode de test" FontWeight="Bold" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Simulation (étoiles synthétiques, sans caméra) :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="SimulationBox" VerticalAlignment="Center"
+                          ToolTip="ON : ciel et monture simulés. OFF : vraie caméra et vraie monture." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0" IsEnabled="{Binding IsChecked, ElementName=SimulationBox}">
+                <TextBlock Text="Passage de nuages (pendant le guidage simulé) :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="CloudSimBox" VerticalAlignment="Center"
+                          ToolTip="Fait passer un voile puis un nuage épais en boucle (100 images) pour tester la pause des corrections et la reprise." />
+            </StackPanel>
+            <TextBlock x:Name="BusyNote" Visibility="Collapsed" Margin="0,6,0,0" Opacity="0.7" TextWrapping="Wrap"
+                       Text="La simulation ne peut pas être changée pendant une calibration ou un guidage." />
+
+            <TextBlock Text="Journal de guidage" FontWeight="Bold" Margin="0,24,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Enregistrer un journal de chaque guidage :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="LogBox" VerticalAlignment="Center"
+                          ToolTip="Un fichier CSV par session : erreurs RA/Dec, impulsions, qualité de l'étoile, événements (dither, étoile perdue…)" />
+                <Button Padding="24,2" Width="160" Content="Ouvrir le dossier" Margin="24,0,0,0" Click="OpenLogs_Click" />
+            </StackPanel>
+
+            <TextBlock Text="Configuration" FontWeight="Bold" Margin="0,24,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="SaveConfigButton" Padding="24,2" MinWidth="240" Content="Sauvegarde de la configuration" Click="SaveConfig_Click"
+                        ToolTip="Enregistre tous les réglages du plugin dans un fichier" />
+                <Button x:Name="LoadConfigButton" Padding="24,2" MinWidth="210" Content="Charger une configuration" Margin="8,0,0,0" Click="LoadConfig_Click"
+                        ToolTip="Remplace les réglages actuels par ceux d'un fichier de configuration" />
+            </StackPanel>
+            <TextBlock Margin="0,6,0,0" Opacity="0.7" TextWrapping="Wrap"
+                       Text="Le fichier (par défaut dans Documents\NINA) contient tous les réglages : guidage, étoiles, nuages, darks, gains et poses par caméra. Les calibrations n'en font pas partie : elles dépendent du matériel." />
+
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="Calibration">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="14,12,14,12">
+            <TextBlock Text="Calibration" FontWeight="Bold" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Pas de calibration (ms) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="StepBox" Width="60"
+                         ToolTip="Durée de chaque impulsion de calibration. Automatique : calculée pour déplacer l'étoile d'environ 6 pixels par pas." />
+                <TextBlock Text="(0 ou vide = automatique)" VerticalAlignment="Center" Margin="6,0,0,0" Opacity="0.7" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Démarrer le guidage après la calibration :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="GuideAfterCalBox" VerticalAlignment="Center"
+                          ToolTip="ON : un clic sur Calibrer lance le guidage dès que la calibration est réussie. OFF : la calibration seule, sans guider ensuite." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Gain automatique avant la calibration ou le guidage :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="AutoGainBox" VerticalAlignment="Center"
+                          ToolTip="ON : le plugin cherche le gain le plus élevé sans étoile saturée (une trentaine de secondes) au démarrage, au plus une fois par heure. Sans effet si le gain n'est pas réglable ou en caméra unique. Il préfère un gain qui a déjà un dark ; il ne peut pas créer de dark seul (utilisez le bouton Auto pour cela)." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <Button Padding="24,2" Width="200" x:Name="ClearCalButton" Content="Effacer la calibration" Click="ClearCal_Click"
+                        ToolTip="Supprime les calibrations enregistrées (tous les côtés du pier) : le prochain guidage demandera de calibrer." />
+                <TextBlock x:Name="CalInfo" VerticalAlignment="Center" Margin="12,0,0,0" Opacity="0.7" TextWrapping="Wrap" />
+            </StackPanel>
+
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="Guidage">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="14,12,14,12">
+            <TextBlock Text="Étoiles de guidage" FontWeight="Bold" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Guidage sur plusieurs étoiles :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="MultiBox" VerticalAlignment="Center"
+                          ToolTip="Moyenne les déplacements de plusieurs étoiles : réduit le bruit de seeing. Pris en compte au prochain démarrage du guidage." />
+                <TextBlock Text="Nombre maximal d'étoiles :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="MultiCountBox" Width="40" ToolTip="De 2 à 12" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Étoile de secours (guidage sur une seule étoile) :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="BackupBox" VerticalAlignment="Center"
+                          ToolTip="Suit une seconde étoile en réserve : si l'étoile de guidage disparaît ou arrive au bord de l'image, la mesure continue sur la réserve. Pris en compte au prochain démarrage du guidage." />
+            </StackPanel>
+
+            <TextBlock Text="Corrections" FontWeight="Bold" Margin="0,24,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Correction intégrale Dec (%) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="IntegralBox" Width="40" ToolTip="De 0 à 50. Ajoute une part de l'erreur à chaque image pour annuler le décalage causé par une dérive constante en Dec. 0 = désactivée ; essayez 10." />
+                <TextBlock Text="(0 = désactivée)" VerticalAlignment="Center" Margin="6,0,0,0" Opacity="0.7" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Mouvement minimal (px) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="MinMoveBox" Width="50" ToolTip="En dessous de cette erreur (pixels), aucune correction n'est envoyée. L'assistant de guidage en suggère une valeur." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Max Dec après retournement (ms) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="PostFlipBox" Width="50" ToolTip="Impulsion Dec maximale temporaire juste après un retournement, pour rattraper plus vite le jeu et la dérive. Reprend la valeur normale dès que l'erreur est sous 1 px (120 s maximum). 0 = désactivé." />
+                <TextBlock Text="(0 = désactivé)" VerticalAlignment="Center" Margin="6,0,0,0" Opacity="0.7" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Compensation du jeu en Dec (ms) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="BacklashBox" Width="50" ToolTip="Durée ajoutée à la première impulsion Dec après chaque inversion de sens, pour traverser le jeu mécanique. Utile en mode Auto. Commencez bas (moitié du jeu mesuré par l'assistant) : trop élevé provoque un dépassement. 0 = désactivée." />
+                <TextBlock Text="(0 = désactivée)" VerticalAlignment="Center" Margin="6,0,0,0" Opacity="0.7" />
+            </StackPanel>
+
+            <TextBlock Text="Mode IA (réglage automatique)" FontWeight="Bold" Margin="0,24,0,6" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6"
+                       Text="Pendant le guidage, le plugin analyse le mouvement de l'étoile avec vos réglages, cherche en simulation de meilleurs réglages (agressivité, hystérésis, mouvement minimal, intégrale Dec) puis les applique par petits pas. Il vérifie sur le ciel que l'erreur baisse et revient aux réglages précédents sinon. Les réglages validés sont conservés pour le guidage suivant (sauvegardez les vôtres avant si besoin) ; l'ajustement est refait périodiquement ; le mode IA se suspend si vous modifiez un réglage à la main." />
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="Activer le mode IA :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="AiBox" VerticalAlignment="Center"
+                          ToolTip="Pris en compte au prochain démarrage du guidage. Désactivé par défaut." />
+                <TextBlock Text="Analyse initiale (min) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="AiLearnBox" Width="40" ToolTip="De 5 à 60 minutes de guidage avec vos réglages avant le premier essai (15 par défaut)." />
+                <TextBlock Text="Vérification de chaque essai (min) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="AiEvalBox" Width="40" ToolTip="De 3 à 30 minutes pour juger chaque essai (8 par défaut). Trois essais au maximum par ajustement." />
+                <TextBlock Text="Nouvel ajustement toutes les (min) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="AiRetuneBox" Width="40" ToolTip="0 = un seul ajustement par guidage ; sinon de 10 à 240 minutes entre deux ajustements (30 par défaut)." />
+            </WrapPanel>
+
+            <TextBlock Text="Dither" FontWeight="Bold" Margin="0,24,0,6" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6"
+                       Text="Amplitude maximale du décalage demandé par NINA entre deux poses, en pixels de la caméra de guidage (tirage aléatoire sur chaque axe). Ces réglages remplacent ceux du profil NINA, qui sont ceux de PHD2. Le seuil et la durée de stabilisation restent ceux du profil." />
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="Amplitude (px) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="DitherPxBox" Width="40" ToolTip="De 0,5 à 30 px (3 par défaut). Pris en compte au prochain dither." />
+                <TextBlock Text="RA seulement :" VerticalAlignment="Center" Margin="24,0,8,0" />
+                <CheckBox x:Name="DitherRaBox" VerticalAlignment="Center" ToolTip="Évite les inversions de sens en Dec (utile si le jeu en Dec est important)." />
+            </WrapPanel>
+
+            <TextBlock Text="Correction d'erreur périodique (PEC)" FontWeight="Bold" Margin="0,24,0,6" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6"
+                       Text="Enregistrez d'abord la courbe d'erreur périodique de la monture pendant un guidage d'au moins 10 minutes (idéalement 20 à 30), puis appliquez-la : le guidage anticipe l'erreur au lieu de seulement la corriger. La phase est retrouvée automatiquement au début de chaque guidage." />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Enregistrer la courbe au prochain guidage :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="PecRecordBox" VerticalAlignment="Center"
+                          ToolTip="Pendant le guidage, la position RA sans correction est reconstituée puis ajustée sur la période de la monture. Le guidage doit durer au moins 10 minutes ; la case se décoche ensuite. Remplace la courbe existante si une erreur périodique nette est trouvée." />
+            </StackPanel>
+            <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Appliquer la courbe :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="PecApplyBox" VerticalAlignment="Center"
+                          ToolTip="Ajoute en RA une impulsion d'anticipation calculée d'après la courbe. Pris en compte au prochain démarrage du guidage ; les 4 à 5 premières minutes servent à retrouver la phase." />
+                <TextBlock Text="Force (%) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="PecStrengthBox" Width="40" ToolTip="De 20 à 100. 80 % est un bon départ : une anticipation moins forte est plus prudente si la courbe est ancienne." />
+                <Button x:Name="PecClearButton" Content="Effacer la courbe" Padding="24,4" MinWidth="150" Margin="24,0,0,0" Click="PecClear_Click" />
+                <Button x:Name="PecAnalyseButton" Content="Analyse du PEC" Padding="24,4" MinWidth="150" Margin="12,0,0,0" Click="PecAnalyse_Click"
+                        ToolTip="Affiche la courbe PEC sur deux tours de vis sans fin, avec les repères du cycle, et un bilan détaillé. Disponible une fois une courbe enregistrée." />
+            </WrapPanel>
+            <TextBlock x:Name="PecInfo" Margin="0,8,0,0" Opacity="0.7" TextWrapping="Wrap" />
+
+            <TextBlock Text="Nuages et pertes d'étoile" FontWeight="Bold" Margin="0,24,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Suspendre les corrections si le flux chute :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="CloudBox" VerticalAlignment="Center"
+                          ToolTip="Quand un nuage fait chuter le flux des étoiles, les mesures sont peu fiables : on n'envoie plus d'impulsions jusqu'au retour du ciel clair." />
+                <TextBlock Text="Seuil (% du flux normal) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="CloudPercentBox" Width="40" ToolTip="De 20 à 90. Les corrections reprennent 15 points au-dessus du seuil." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Arrêter le guidage après (minutes) :" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="LostMinBox" Width="40" ToolTip="Durée maximale d'attente d'un ciel clair ou du retour de l'étoile. 0 = attendre sans limite." />
+                <TextBlock Text="(0 = sans limite)" VerticalAlignment="Center" Margin="6,0,0,0" Opacity="0.7" />
+            </StackPanel>
+
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem x:Name="MonoTab" Header="Caméra unique" ToolTip="Disponible seulement si « Caméra unique » est activé dans la fenêtre Configuration du guideur.">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="14,12,14,12">
+            <TextBlock Text="Correction entre les poses" FontWeight="Bold" Margin="0,0,0,6" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6"
+                       Text="Pour une caméra unique, sans guidage : après chaque pose de lumière, le plugin compare les étoiles de l'image à celles de la première pose, mesure le décalage et la dérive, et recentre le champ par de courtes impulsions juste après la fin de la pose (pendant le téléchargement). Il ne corrige pas les traînées pendant une pose. Il utilise la calibration du guidage (même caméra et même télescope) et se met en retrait quand le guidage interne tourne. Ne l'activez pas avec un autre guideur actif. Un dither d'au moins quelques secondes d'arc est reconnu et conservé. Le journal « interexposure_*.log » est dans le dossier des journaux." />
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="Activer :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="InterExpBox" VerticalAlignment="Center" ToolTip="Désactivé par défaut. Pris en compte à la prochaine pose." />
+                <TextBlock Text="Durée maximale des impulsions (ms) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="InterExpBudgetBox" Width="50" ToolTip="De 500 à 20000 ms (3000 par défaut). Il faut laisser entre deux poses au moins cette durée plus 1 à 2 s." />
+                <TextBlock Text="Rotation de la caméra (°) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="InterExpRotBox" Width="40" ToolTip="Rotation de la caméra principale par rapport à la caméra de guidage ; 0 si c'est la même caméra." />
+                <TextBlock Text="Échelle image (″/px, 0 = auto) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="InterExpScaleBox" Width="50" ToolTip="0 : calculée avec la taille de pixel, le binning et la focale de NINA." />
+                <TextBlock Text="Seuil de saut (″) :" VerticalAlignment="Center" Margin="24,0,6,0" />
+                <TextBox x:Name="InterExpJumpBox" Width="40" ToolTip="Écart à la prévision à partir duquel on considère un dither ou un recentrage (8 par défaut)." />
+            </WrapPanel>
+
+            <TextBlock Text="Diagnostic caméra unique" FontWeight="Bold" Margin="0,24,0,6" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6"
+                       Text="Pour essayer une caméra commune au guidage et à NINA : cochez l'option, activez « Caméra unique » dans Configuration, laissez l'aperçu en direct tourner (poses de 1 s) puis lancez à la main dans NINA une pose, un plate-solving et un autofocus. Le journal « cameradiag_*.log » (dossier des journaux) donne l'heure de chaque pose du plugin et de NINA et les erreurs du pilote." />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Journal de diagnostic :" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <CheckBox x:Name="CameraDiagBox" VerticalAlignment="Center" ToolTip="Désactivé par défaut. Pris en compte tout de suite." />
+            </StackPanel>
+
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="Bibliothèque de dark">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="14,12,14,12">
+            <TextBlock Text="Bibliothèque de darks" FontWeight="Bold" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <Button Padding="24,2" MinWidth="100" x:Name="CreateButton" Content="Créer…" Click="Create_Click"
+                        ToolTip="Prendre des darks pour une plage de durées de pose" />
+                <Button Padding="24,2" MinWidth="100" x:Name="DeleteButton" Content="Supprimer" Margin="8,0,0,0" Click="Delete_Click"
+                        ToolTip="Supprime toutes les bibliothèques de darks" />
+                <TextBlock Text="Utiliser la bibliothèque :" VerticalAlignment="Center" Margin="24,0,8,0" />
+                <CheckBox x:Name="UseBox" VerticalAlignment="Center"
+                          ToolTip="Soustrait le dark de même pose et de même gain des images de guidage. Actif seulement s'il existe une bibliothèque." />
+            </StackPanel>
+            <TextBlock x:Name="LibraryInfo" Margin="0,8,0,0" Opacity="0.7" TextWrapping="Wrap" />
+                </StackPanel></ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

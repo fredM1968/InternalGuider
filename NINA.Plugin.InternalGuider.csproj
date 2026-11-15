@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<Platforms>x64</Platforms>
+		<RootNamespace>NINA.Plugin.InternalGuider</RootNamespace>
+		<AssemblyName>NINA.Plugin.InternalGuider</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NINA.Plugin" Version="3.2.0.9001" />
+	</ItemGroup>
+
+	<Target Name="CopyToNina" AfterTargets="Build">
+		<Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb"
+			  DestinationFolder="$(LOCALAPPDATA)\NINA\Plugins\3.0.0\InternalGuider" />
+	</Target>
+
+</Project>
+
